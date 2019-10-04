@@ -7,12 +7,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.JavascriptInterface;
-import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -41,24 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
         webView.loadUrl("http://192.168.1.9:8080?timestamp=" + new Date().getTime());
         webView.getSettings().setJavaScriptEnabled(true);
-
-//        JSBridge - URL Scheme 拦截
-//        webView.setWebChromeClient(new WebChromeClient() {
-//            @Override
-//            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-//                if (!message.startsWith("jsbridge://")) {
-//                    return super.onJsAlert(view, url, message, result);
-//                }
-//
-//                String text = message.substring(message.indexOf("=") + 1);
-//                self.showNativeDialog(text);
-//
-//                result.confirm();
-//                return true;
-//            }
-//        });
-
-//      JSBridge - API 注入
         webView.setWebChromeClient(new WebChromeClient());
         webView.addJavascriptInterface(new NativeBridge(this), "NativeBridge");
 
@@ -93,14 +73,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    URL Scheme 拦截
     private void showWebDialog(String text) {
         String jsCode = String.format("window.showWebDialog('%s')", text);
         webView.evaluateJavascript(jsCode, null);
-    }
-
-    private void showNativeDialog(String text) {
-        new AlertDialog.Builder(this).setMessage(text).create().show();
     }
 
     interface Callback {
@@ -134,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    API 注入
     class NativeBridge {
         private Context ctx;
         NativeBridge(Context ctx) {
