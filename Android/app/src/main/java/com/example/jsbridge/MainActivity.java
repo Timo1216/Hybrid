@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private Button showBtn;
     private Button refreshBtn;
     private MainActivity self = this;
+    // H5 页面的地址
+    private String webHost = "http://192.168.147.241:8080";
+    private String webLink = webHost + "?timestamp=" + new Date().getTime();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         showBtn = findViewById(R.id.showBtn);
         refreshBtn = findViewById(R.id.refreshBtn);
 
-        webView.loadUrl("http://192.168.1.9:8080?timestamp=" + new Date().getTime());
+        webView.loadUrl(webLink);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebChromeClient(new WebChromeClient());
         webView.addJavascriptInterface(new NativeBridge(this), "NativeBridge");
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         refreshBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                webView.loadUrl("http://192.168.1.9:8080?timestamp=" + new Date().getTime());
+                webView.loadUrl(webLink);
             }
         });
     }
